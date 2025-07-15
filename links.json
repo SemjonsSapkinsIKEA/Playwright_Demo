@@ -1,0 +1,5 @@
+{
+    "saucedemo": "https://www.saucedemo.com/v1/",
+    "sauceCart": "https://www.saucedemo.com/v1/cart.html",
+    "checkOutOverviewPage":  "https://www.saucedemo.com/v1/checkout-step-two.html"
+}
