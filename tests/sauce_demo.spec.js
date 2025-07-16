@@ -109,8 +109,8 @@ test.describe("Tests that pertain to the purchase flow", () => {
     await navigator.loginUsernameWithName();
     await navigator.loginUsernameWithLastName();
     await navigator.postalCode();
-    await navigator.continueButtonPurchasing();
-    await navigator.finishButtonPurchasing();
+    await navigator.clickAnything("continueButtonPurchasing");
+    await navigator.clickAnything("finishButtonPurchasing");
     await navigator.verifyPresenceOfLocator("successfullPurchaseText");
   });
 
@@ -147,8 +147,8 @@ test.describe("Accessibility tests", () => {
 
 
   //The following values need to be 1-6 as there are only 6 items on the homepage as of now.
-    await navigator.tabAddItemsIntoCart(7);
-    await navigator.verifyItemCountInCart(7);
+    await navigator.tabAddItemsIntoCart(4);
+    await navigator.verifyItemCountInCart(4);
   });
 
   test("Tab through the entire purchase flow", async ({ page }) => {
@@ -288,7 +288,7 @@ test.describe("Cost Calculation Functions", () => {
     await navigator.loginUsernameWithName();
     await navigator.loginUsernameWithLastName();
     await navigator.postalCode();
-    await navigator.continueButtonPurchasing();
+    await navigator.clickAnything("continueButtonPurchasing");
     cleanedPrice = await navigator.totalPriceCheck();
     await navigator.totalPriceComparison(cleanedPrice);
   });
@@ -329,15 +329,13 @@ test.describe("Cost Calculation Functions", () => {
   });
 });
 
+
+//TO DO 
 test.describe("Stress Tests", async () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
     await navigator.loginUsername(credentials.standard_user);
     await navigator.loginPassword(credentials.standard_password);
-
-    for (let i= 0; i < 5; i++){
-      
-    }
     await navigator.clickAnything("loginButton");
   });
 

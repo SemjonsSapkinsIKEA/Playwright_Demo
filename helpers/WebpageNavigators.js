@@ -27,16 +27,6 @@ export class webpageNavigators {
     await sauce_locators.checkOutButton(this.page).click();
   }
 
-  //Return to the homepage from the cart via the continue button
-  async continueButtonPurchasing() {
-    await sauce_locators.continueButtonPurchasing(this.page).click();
-  }
-
-  //Clicks the finish button on the purchasing page to complete the purchas
-  async finishButtonPurchasing() {
-    await sauce_locators.finishButtonPurchasing(this.page).click();
-  }
-
   //Given an itemName locators name, clicks the locator.
   async clickAnything(itemName) {
     await sauce_locators[itemName](this.page).click();
@@ -238,11 +228,11 @@ export class webpageNavigators {
     await this.clickAnything("checkOutButton");
 
     if (focusOfTest === "firstName") {
-      await this.continueButtonPurchasing();
+      await this.clickAnything("continueButtonPurchasing");
       await this.verifyPresenceOfLocator(errorTextExpected);
     } else if (focusOfTest === "lastName") {
       await this.loginUsernameWithName();
-      await this.continueButtonPurchasing();
+      await this.clickAnything("continueButtonPurchasing");
       await this.verifyPresenceOfLocator(errorTextExpected);
     } else {
       await this.loginUsernameWithName();
