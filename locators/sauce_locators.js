@@ -23,6 +23,8 @@ export const sauce_locators = {
     page.locator(
       "xpath=//h3[normalize-space()='Error: Postal Code is required']"
     ), //Xpath describing postal code missing error text in the overview page
+    itemCartCountXPath: (page) => page.locator("xpath=/html/body/div/div[2]/div[1]/div[2]/a/span"),
+
 
   //Buttons
   openMenu: (page) => page.getByRole("button", { name: "Open Menu" }), // Open Menu button on the top left corner
@@ -33,6 +35,7 @@ export const sauce_locators = {
   finishButtonPurchasing: (page) => page.getByRole("link", { name: "FINISH" }), //Finishing purchasing button in cart
   checkOutButton: (page) => page.getByRole("link", { name: "CHECKOUT" }), //Checkout button in the shopping cart
   addToCartButton: (page) => page.getByRole("button", { name: "ADD TO CART" }), //Add to cart button for the products
+  removeFromCartButton: (page) => page.getByRole("button", {name: 'REMOVE'}), 
   removeFromCart: (page) => page.getByRole("button", { name: "REMOVE" }), //Button to remove selected items from the cart
   sortZToA: (page) => page.getByRole("combobox").selectOption("za"), //Reverse Alphabetic Item Sorting Button Found on Homepage (Z-A)
   sortLowToHighPrice: (page) => page.getByRole("combobox").selectOption("lohi"), //Low to High Price Item Sorting Button Found on Homepage
@@ -49,7 +52,7 @@ export const sauce_locators = {
   lastNameField: (page) => page.locator('[data-test="lastName"]'), //Last name field in the purchasing page
   postalCodeField: (page) => page.locator('[data-test="postalCode"]'), //Postal code field in the purchasing page
 
-  //Locators for Items Once Added to Shopping Cart
+  //Locators for Items Once Added to Shopping Cart Page
   bikeLight: (page) => page.locator("text=1Sauce Labs Bike LightA red"), //Button for the bike light product
   boltTshirt: (page) => page.locator("text=1Sauce Labs Bolt T-ShirtGet"), //Button for the Bolt T-Shirt product
   fleeceJacket: (page) => page.locator("text=1Sauce Labs Fleece JacketIt's"), //Button for the Fleece Jacket product

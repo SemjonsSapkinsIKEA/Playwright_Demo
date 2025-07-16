@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { webpageNavigators } from "../helpers/WebpageNavigators.js";
+import { createZstdDecompress } from "zlib";
 const sauce_locators = require("../locators/sauce_locators").sauce_locators;
 const links = require("../links.json");
 const text_resources = require("../text_resources.js").text_resources;
@@ -113,11 +114,53 @@ test.describe("Tests that pertain to the purchase flow", () => {
     await navigator.verifyPresenceOfLocator("successfullPurchaseText");
   });
 
+  //TO DO
   //Test Negative Cart Scenario
 
-  test("Negative Cart Scenario", async ({ page }) => {
+  test.skip("Negative Cart Scenario", async ({ page }) => {
     const navigator = new webpageNavigators(page);
   });
+});
+
+//The following test suite tests the accesibility of the website by utilizing only keyboard functions and minimal clicks
+
+test.describe("Accessibility tests", () => {
+  //Test accesibility of login page by only utilizing tab
+  test("Tab Test Through Login Page", async ({ page }) => {
+    const navigator = new webpageNavigators(page);
+    await navigator.goToLoginPage();
+    await navigator.pressTabOnKeyboard();
+    await navigator.loginUserNameNoClick(credentials.standard_user);
+    await navigator.pressTabOnKeyboard();
+    await navigator.loginPassword(credentials.standard_password);
+    await navigator.pressTabOnKeyboard();
+    await navigator.pressEnterOnKeyBoard();
+    await navigator.verifyPresenceOfLocator("homePageCheck");
+  });
+
+  test("Tab Add All Items to Cart", async ({ page }) => {
+    const navigator = new webpageNavigators(page);
+    await navigator.loginUsername(credentials.standard_user);
+    await navigator.loginPassword(credentials.standard_password);
+    await navigator.pressTabOnKeyboard();
+    await navigator.pressEnterOnKeyBoard();
+
+
+  //The following values need to be 1-6 as there are only 6 items on the homepage as of now.
+    await navigator.tabAddItemsIntoCart(7);
+    await navigator.verifyItemCountInCart(7);
+  });
+
+  test("Tab through the entire purchase flow", async ({ page }) => {
+    const navigator = new webpageNavigators(page);
+    await navigator.loginUsername(credentials.standard_user);
+    await navigator.loginPassword(credentials.standard_password);
+    await navigator.clickAnything("loginButton");
+  });
+});
+
+test.describe("Session Persistence Tests", () => {
+  test.skip("Add Item, Logout and Log Back in", async ({ page }) => {});
 });
 
 //Test Suite for the Shopping Cart Functionalities and Purchasing
@@ -136,6 +179,8 @@ test.describe("Tests that pertain to the shopping cart functionalities and purch
   }) => {
     const navigator = new webpageNavigators(page);
     await navigator.addNItemsToCart(6);
+    await navigator.verifyItemCountInCart(6);
+
     await page.goto(links.sauceCart);
     await navigator.verifyPresenceOfLocator("bikeLight");
     await navigator.verifyPresenceOfLocator("backPack");
@@ -281,6 +326,23 @@ test.describe("Cost Calculation Functions", () => {
     await navigator.addNItemsToCart(2);
     await navigator.getToPaymentOverview();
     await navigator.calculateTax();
+  });
+});
 
+test.describe("Stress Tests", async () => {
+  test.beforeEach(async ({ page }) => {
+    const navigator = new webpageNavigators(page);
+    await navigator.loginUsername(credentials.standard_user);
+    await navigator.loginPassword(credentials.standard_password);
+
+    for (let i= 0; i < 5; i++){
+      
+    }
+    await navigator.clickAnything("loginButton");
+  });
+
+  //Stress test website by repeatedly adding/removing items to shopping cart
+  test.skip("Add/Remove Item to Shopping Cart", async ({ page }) => {
+    const navigator = new webpageNavigators(page);
   });
 });

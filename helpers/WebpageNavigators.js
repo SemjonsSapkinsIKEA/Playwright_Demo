@@ -62,12 +62,48 @@ export class webpageNavigators {
     await expect(sauce_locators[itemName](this.page)).not.toBeVisible();
   }
 
+  async goToLoginPage() {
+    await this.page.goto(links.saucedemo);
+  }
+
   //Login utilizing the provided "Name" parameter on the starting page
   async loginUsername(name) {
-    await this.page.goto(links.saucedemo);
+    await this.goToLoginPage();
     await sauce_locators.userNameField(this.page).click();
     await sauce_locators.userNameField(this.page).fill(name);
   }
+
+  async tabAddItemsIntoCart(itemCount) {
+    await this.clickAnything("homePageCheck");
+
+    for (let i = 0; i < 4; i++) {
+     await this.pressTabOnKeyboard();
+    }
+
+    for (let i = 0; i < itemCount; i++) {
+     await this.pressEnterOnKeyBoard();
+      for (let i = 0; i < 3; i++) {
+       await this.pressTabOnKeyboard();
+      }
+    }
+  }
+
+  async verifyItemCountInCart(expectedNumber) {
+    let itemsInCart = sauce_locators.removeFromCartButton(this.page);
+    let itemsInCartCount = await itemsInCart.count();
+
+    console.log(itemsInCartCount);
+    console.log(expectedNumber);
+
+    expect (itemsInCartCount).toEqual(expectedNumber);
+    
+    // expect (expectedNumber).toEqual(cartCount);
+  }
+
+  async loginUserNameNoClick(name) {
+    await sauce_locators.userNameField(this.page).fill(name);
+  }
+
   //Clicks the first name purchasing field and fills it with the postal code from credentials
   async addNItemsToCart(numberOfItems) {
     let buttonList = await this.page.locator(".btn_primary.btn_inventory");
@@ -117,6 +153,14 @@ export class webpageNavigators {
     await expect(this.page.locator(`text=${text}`)).toBeVisible({
       timeout: 10000,
     });
+  }
+
+  async pressTabOnKeyboard() {
+    await this.page.keyboard.press("Tab");
+  }
+
+  async pressEnterOnKeyBoard() {
+    await this.page.keyboard.press("Enter");
   }
 
   //Function to compare two list
@@ -208,7 +252,7 @@ export class webpageNavigators {
   }
 
   async calculateTax() {
-    //0.08005 is the assumed tax rate.
+    //0.08 is the assumed tax rate.
 
     let taxListedOnHomepage = await sauce_locators.taxCheckoutPage(this.page);
     let taxListedInText = await taxListedOnHomepage.allTextContents();
