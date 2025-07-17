@@ -1,10 +1,18 @@
 const links = require("../links.json");
-const credentials = require("../credentials.json");
-
 const sauce_locators = require("../locators/sauce_locators").sauce_locators;
 const text_resources = "../text_resources.json";
 const { expect } = require("@playwright/test");
+let credentials = {};
+try {
+  credentials = require("../credentials.json");
+} catch (e) {
+  console.log("Github Secrets Rejected, wants to use credentials");
+}
+
+
 export class webpageNavigators {
+
+
   constructor(page) {
     this.page = page;
   }
@@ -105,24 +113,28 @@ export class webpageNavigators {
   }
 
   async loginUsernameWithName() {
+    const userName = credentials.firstName || process.env.FIRST_NAME;
     await sauce_locators.firstNameField(this.page).click();
-    await sauce_locators.firstNameField(this.page).fill(credentials.firstName);
+    await sauce_locators.firstNameField(this.page).fill(userName);
   }
   //Clicks the last name purchasing field and fills it with the postal code from credentials
 
   async loginUsernameWithLastName() {
+    const lastName = credentials.lastName || process.env.LAST_NAME;
+
         await sauce_locators.lastNameField(this.page).click();
 
-    await sauce_locators.lastNameField(this.page).fill(credentials.lastName);
+    await sauce_locators.lastNameField(this.page).fill(lastName);
   }
 
   //Clicks the postal code field and fills it with the postal code from credentials
   async postalCode() {
 
+    const postalCode = credentials.postalCode || process.env.POSTAL_CODE;
     await sauce_locators.postalCodeField(this.page).click();
     await sauce_locators
       .postalCodeField(this.page)
-      .fill(credentials.postalCode);
+      .fill(postalCode);
   }
 
   //Logs in with the standard user credentials PASSWORD ONLY
