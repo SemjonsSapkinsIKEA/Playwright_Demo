@@ -1,10 +1,14 @@
-import { test, expect } from "@playwright/test";
+import { test } from "@playwright/test";
 import { webpageNavigators } from "../helpers/WebpageNavigators.js";
 import { createZstdDecompress } from "zlib";
 const sauce_locators = require("../locators/sauce_locators").sauce_locators;
 const links = require("../links.json");
 const text_resources = require("../text_resources.js").text_resources;
-const credentials = require("../credentials.json");
+let credentials = {};
+
+try {
+  credentials = require("../credentials.json");
+} catch (error) {}
 
 //After each hook to logout annd close the page after each test
 test.afterEach(async ({ page }) => {
@@ -17,18 +21,23 @@ test.describe("Group of Login Functionality Tests", () => {
 
   test("Standard Login Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
-
     await navigator.verifyPresenceOfLocator("homePageCheck");
   });
 
   //Test the standard logout functionality post successful login
   test("Login & Logout Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
     await sauce_locators.openMenu(page).click();
     await sauce_locators.logOutButton(page).click();
@@ -37,16 +46,22 @@ test.describe("Group of Login Functionality Tests", () => {
   //Test an arbitrary login attempt with an incorrect username
   test("Unsuccessful Login Test With Invalid Username", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.invalid_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName = credentials.invalid_user || process.env.INVALID_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
     await navigator.verifyPresenceOfLocator("errorLogin");
   });
 
   test("Unsuccessful Login Test With Invalid Password", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.invalid_password);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.invalid_password || process.env.INVALID_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
     await navigator.verifyPresenceOfLocator("errorLogin");
   });
@@ -54,9 +69,12 @@ test.describe("Group of Login Functionality Tests", () => {
   //Testing login attempt of a locked out user (SHOULD RESULT ERROR)
   test("Login Attempt of a Locked Out User", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-
-    await navigator.loginUsername(credentials.locked_out_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName =
+      credentials.locked_out_user || process.env.LOCKED_OUT_USERNAME;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
 
     await navigator.verifyPresenceOfLocator("errorLogin");
@@ -66,8 +84,11 @@ test.describe("Group of Login Functionality Tests", () => {
 test.describe("Tests that pertain to the purchase flow", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
   });
 
@@ -128,11 +149,14 @@ test.describe.skip("Accessibility tests", () => {
   //Test accesibility of login page by only utilizing tab
   test("Tab Test Through Login Page", async ({ page }) => {
     const navigator = new webpageNavigators(page);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.goToLoginPage();
     await navigator.pressTabOnKeyboard();
-    await navigator.loginUserNameNoClick(credentials.standard_user);
+    await navigator.loginUserNameNoClick(userName);
     await navigator.pressTabOnKeyboard();
-    await navigator.loginPassword(credentials.standard_password);
+    await navigator.loginPassword(passWord);
     await navigator.pressTabOnKeyboard();
     await navigator.pressEnterOnKeyBoard();
     await navigator.verifyPresenceOfLocator("homePageCheck");
@@ -140,13 +164,15 @@ test.describe.skip("Accessibility tests", () => {
 
   test("Tab Add All Items to Cart", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.pressTabOnKeyboard();
     await navigator.pressEnterOnKeyBoard();
 
-
-  //The following values need to be 1-6 as there are only 6 items on the homepage as of now.
+    //The following values need to be 1-6 as there are only 6 items on the homepage as of now.
     await navigator.tabAddItemsIntoCart(4);
     await navigator.verifyItemCountInCart(4);
   });
@@ -160,18 +186,18 @@ test.describe.skip("Accessibility tests", () => {
 });
 
 test.describe("Session Persistence Tests", () => {
-    test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
   });
 
   test.skip("Login Add Item, Logout and Log Back in", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    
-
-
   });
 });
 
@@ -180,8 +206,11 @@ test.describe("Tests that pertain to the shopping cart functionalities and purch
   // Before Each Test Case, Navigate to the Test Website & Login
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
   });
 
@@ -192,8 +221,7 @@ test.describe("Tests that pertain to the shopping cart functionalities and purch
     const navigator = new webpageNavigators(page);
     await navigator.addNItemsToCart(6);
     await navigator.verifyItemCountInCart(6);
-
-    await page.goto(links.sauceCart);
+    await navigator.goToCart();
     await navigator.verifyPresenceOfLocator("bikeLight");
     await navigator.verifyPresenceOfLocator("backPack");
     await navigator.verifyPresenceOfLocator("boltTshirt");
@@ -217,8 +245,11 @@ test.describe("Tests that pertain to the shopping cart functionalities and purch
 test.describe("Test the Item Sorting Function on the homepage", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
   });
 
@@ -227,7 +258,6 @@ test.describe("Test the Item Sorting Function on the homepage", () => {
     const itemLinkList = page.getByRole("link");
     const itemProducts = await itemLinkList.allTextContents();
     const navigator = new webpageNavigators(page);
-    console.log(itemProducts);
     const filteredList = itemProducts.filter((name) =>
       text_resources.filteredListAZ.includes(name)
     );
@@ -240,7 +270,6 @@ test.describe("Test the Item Sorting Function on the homepage", () => {
     await sauce_locators.sortZToA(page);
     const itemLinkList = page.getByRole("link");
     const itemProductNames = await itemLinkList.allTextContents();
-    console.log(itemProductNames);
     const expectedList = itemProductNames.filter((name) =>
       text_resources.filteredListZA.includes(name)
     );
@@ -270,8 +299,11 @@ test.describe("Test the Item Sorting Function on the homepage", () => {
 test.describe("Cost Calculation Functions", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.standard_password);
+    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
   });
 
@@ -280,7 +312,7 @@ test.describe("Cost Calculation Functions", () => {
     page,
   }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.addNItemsToCart(3);
+    await navigator.addNItemsToCart(2);
     await navigator.getToPaymentOverview();
     await navigator.totalPriceCheck();
   });
@@ -290,7 +322,7 @@ test.describe("Cost Calculation Functions", () => {
     page,
   }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.addNItemsToCart(3);
+    await navigator.addNItemsToCart(2);
     await navigator.getToPaymentOverview();
     let cleanedPrice = await navigator.totalPriceCheck();
     await navigator.totalPriceComparison(cleanedPrice);
@@ -308,7 +340,7 @@ test.describe("Cost Calculation Functions", () => {
   //Tests if adding an arbitrary item is accurately reflected in the total price
   test("Test Updating of Total Price Adding One Item", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.addNItemsToCart(3);
+    await navigator.addNItemsToCart(2);
     await navigator.getToPaymentOverview();
     let cleanedPrice = await navigator.totalPriceCheck();
     await navigator.totalPriceComparison(cleanedPrice);
@@ -323,14 +355,14 @@ test.describe("Cost Calculation Functions", () => {
   //Tests if the tax calculation is correct
   test("Tax Calculation Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.addNItemsToCart(3);
+    await navigator.addNItemsToCart(2);
     await navigator.getToPaymentOverview();
     await navigator.calculateTax();
   });
 
   test("Tax Update Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    await navigator.addNItemsToCart(3);
+    await navigator.addNItemsToCart(2);
     await navigator.getToPaymentOverview();
     await navigator.calculateTax();
     await navigator.clickAnything("openMenu");
@@ -338,21 +370,5 @@ test.describe("Cost Calculation Functions", () => {
     await navigator.addNItemsToCart(2);
     await navigator.getToPaymentOverview();
     await navigator.calculateTax();
-  });
-});
-
-
-//TO DO 
-test.describe("Stress Tests", async () => {
-  test.beforeEach(async ({ page }) => {
-    const navigator = new webpageNavigators(page);
-    await navigator.loginUsername(credentials.standard_user);
-    await navigator.loginPassword(credentials.standard_password);
-    await navigator.clickAnything("loginButton");
-  });
-
-  //Stress test website by repeatedly adding/removing items to shopping cart
-  test.skip("Add/Remove Item to Shopping Cart", async ({ page }) => {
-    const navigator = new webpageNavigators(page);
   });
 });

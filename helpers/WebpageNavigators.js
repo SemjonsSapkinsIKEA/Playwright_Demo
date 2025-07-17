@@ -1,5 +1,10 @@
 const links = require("../links.json");
-const credentials = require("../credentials.json");
+const credentials = {}
+try {
+  credentials = require("../credentials.json");
+} catch (error) {
+  
+} 
 const sauce_locators = require("../locators/sauce_locators").sauce_locators;
 const text_resources = "../text_resources.json";
 const { expect } = require("@playwright/test");
@@ -81,9 +86,6 @@ export class webpageNavigators {
     let itemsInCart = sauce_locators.removeFromCartButton(this.page);
     let itemsInCartCount = await itemsInCart.count();
 
-    console.log(itemsInCartCount);
-    console.log(expectedNumber);
-
     expect (itemsInCartCount).toEqual(expectedNumber);
     
     // expect (expectedNumber).toEqual(cartCount);
@@ -97,7 +99,6 @@ export class webpageNavigators {
   async addNItemsToCart(numberOfItems) {
     let buttonList = await this.page.locator(".btn_primary.btn_inventory");
     const count = await buttonList.count();
-    console.log("Number of Add to Cart buttons:", count);
 
     while (
       (await this.page.locator(".btn_primary.btn_inventory").count()) >
@@ -137,7 +138,6 @@ export class webpageNavigators {
   //Function to verify the visibility of text on a homepage
   async textVisibility(text) {
     await expect(this.page.locator(`text=${text}`)).toBeVisible({
-      timeout: 10000,
     });
   }
 
@@ -179,7 +179,6 @@ export class webpageNavigators {
     const sumPrice = priceWithoutSign
       .map((text) => parseFloat(text.replace("$", "")))
       .reduce((acc, val) => acc + val, 0);
-    console.log("Total price listed on page is: " + sumPrice);
 
     return sumPrice;
     //await this.totalPriceComparison(sumPrice);
@@ -195,9 +194,6 @@ export class webpageNavigators {
       subTotalPriceWithText
     );
     let totalPrice = await this.totalPriceCheck();
-
-    console.log(totalPrice);
-    console.log(numberWithoutSign);
 
     expect(totalPrice).toEqual(numberWithoutSign);
   }
@@ -245,7 +241,6 @@ export class webpageNavigators {
 
     let taxListedOnHomepage = await sauce_locators.taxCheckoutPage(this.page);
     let taxListedInText = await taxListedOnHomepage.allTextContents();
-    console.log("Preprocessed Tax: " + taxListedInText);
 
     let taxNumberProcessed = await this.convertTaxToNumber(taxListedInText);
     let totalPriceOnHomepage = await this.totalPriceCheck();

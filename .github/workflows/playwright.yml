@@ -4,6 +4,7 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+    
 jobs:
   test:
     timeout-minutes: 60
@@ -18,6 +19,18 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
+      env:
+        STANDARD_USERNAME: ${{ secrets.STANDARD_USERNAME }}
+        STANDARD_PASSWORD: ${{ secrets.STANDARD_PASSWORD }}
+        FIRST_NAME: ${{ secrets.FIRST_NAME }}
+        LAST_NAME: ${{ secrets.LAST_NAME }}
+        GLITCH_USER: ${{ secrets.GLITCH_USER }}
+        INVALID_PASSWORD: ${{ secrets.INVALID_PASSWORD }}
+        INVALID_USER: ${{ secrets.INVALID_USER }}
+        LOCKED_OUT_USERNAME: ${{ secrets.LOCKED_OUT_USERNAME }}
+        POSTAL_CODE: ${{ secrets.POSTAL_CODE }}
+        PROBLEM_USER: ${{ secrets.PROBLEM_USER }}
+
       run: npx playwright test
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
