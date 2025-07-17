@@ -1,10 +1,6 @@
 const links = require("../links.json");
-const credentials = {}
-try {
-  credentials = require("../credentials.json");
-} catch (error) {
-  
-} 
+const credentials = require("../credentials.json");
+
 const sauce_locators = require("../locators/sauce_locators").sauce_locators;
 const text_resources = "../text_resources.json";
 const { expect } = require("@playwright/test");
@@ -109,16 +105,21 @@ export class webpageNavigators {
   }
 
   async loginUsernameWithName() {
+    await sauce_locators.firstNameField(this.page).click();
     await sauce_locators.firstNameField(this.page).fill(credentials.firstName);
   }
   //Clicks the last name purchasing field and fills it with the postal code from credentials
 
   async loginUsernameWithLastName() {
+        await sauce_locators.lastNameField(this.page).click();
+
     await sauce_locators.lastNameField(this.page).fill(credentials.lastName);
   }
 
   //Clicks the postal code field and fills it with the postal code from credentials
   async postalCode() {
+
+    await sauce_locators.postalCodeField(this.page).click();
     await sauce_locators
       .postalCodeField(this.page)
       .fill(credentials.postalCode);

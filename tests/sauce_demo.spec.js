@@ -4,11 +4,8 @@ import { createZstdDecompress } from "zlib";
 const sauce_locators = require("../locators/sauce_locators").sauce_locators;
 const links = require("../links.json");
 const text_resources = require("../text_resources.js").text_resources;
-let credentials = {};
+const credentials = require("../credentials.json");
 
-try {
-  credentials = require("../credentials.json");
-} catch (error) {}
 
 //After each hook to logout annd close the page after each test
 test.afterEach(async ({ page }) => {
