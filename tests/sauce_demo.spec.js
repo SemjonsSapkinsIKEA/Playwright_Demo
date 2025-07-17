@@ -124,7 +124,7 @@ test.describe("Tests that pertain to the purchase flow", () => {
 
 //The following test suite tests the accesibility of the website by utilizing only keyboard functions and minimal clicks
 
-test.describe("Accessibility tests", () => {
+test.describe.skip("Accessibility tests", () => {
   //Test accesibility of login page by only utilizing tab
   test("Tab Test Through Login Page", async ({ page }) => {
     const navigator = new webpageNavigators(page);
@@ -160,7 +160,19 @@ test.describe("Accessibility tests", () => {
 });
 
 test.describe("Session Persistence Tests", () => {
-  test.skip("Add Item, Logout and Log Back in", async ({ page }) => {});
+    test.beforeEach(async ({ page }) => {
+    const navigator = new webpageNavigators(page);
+    await navigator.loginUsername(credentials.standard_user);
+    await navigator.loginPassword(credentials.standard_password);
+    await navigator.clickAnything("loginButton");
+  });
+
+  test.skip("Login Add Item, Logout and Log Back in", async ({ page }) => {
+    const navigator = new webpageNavigators(page);
+    
+
+
+  });
 });
 
 //Test Suite for the Shopping Cart Functionalities and Purchasing

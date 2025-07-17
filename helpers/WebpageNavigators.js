@@ -59,7 +59,6 @@ export class webpageNavigators {
   //Login utilizing the provided "Name" parameter on the starting page
   async loginUsername(name) {
     await this.goToLoginPage();
-    await sauce_locators.userNameField(this.page).click();
     await sauce_locators.userNameField(this.page).fill(name);
   }
 
@@ -109,19 +108,16 @@ export class webpageNavigators {
   }
 
   async loginUsernameWithName() {
-    await sauce_locators.firstNameField(this.page).click();
     await sauce_locators.firstNameField(this.page).fill(credentials.firstName);
   }
   //Clicks the last name purchasing field and fills it with the postal code from credentials
 
   async loginUsernameWithLastName() {
-    await sauce_locators.lastNameField(this.page).click();
     await sauce_locators.lastNameField(this.page).fill(credentials.lastName);
   }
 
   //Clicks the postal code field and fills it with the postal code from credentials
   async postalCode() {
-    await sauce_locators.postalCodeField(this.page).click();
     await sauce_locators
       .postalCodeField(this.page)
       .fill(credentials.postalCode);
@@ -145,9 +141,12 @@ export class webpageNavigators {
     });
   }
 
+  //Function reduces 
   async pressTabOnKeyboard() {
     await this.page.keyboard.press("Tab");
   }
+
+    //Function inputs a tab keyboard input
 
   async pressEnterOnKeyBoard() {
     await this.page.keyboard.press("Enter");
