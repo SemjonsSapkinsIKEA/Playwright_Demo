@@ -21,7 +21,7 @@ test.describe("Group of Login Functionality Tests", () => {
 
   test("Standard Login Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.loginUsername(userName);
@@ -33,7 +33,7 @@ test.describe("Group of Login Functionality Tests", () => {
   //Test the standard logout functionality post successful login
   test("Login & Logout Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.loginUsername(userName);
@@ -57,7 +57,7 @@ test.describe("Group of Login Functionality Tests", () => {
 
   test("Unsuccessful Login Test With Invalid Password", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.invalid_password || process.env.INVALID_PASSWORD;
     await navigator.loginUsername(userName);
@@ -84,7 +84,7 @@ test.describe("Group of Login Functionality Tests", () => {
 test.describe("Tests that pertain to the purchase flow", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.loginUsername(userName);
@@ -149,7 +149,7 @@ test.describe.skip("Accessibility tests", () => {
   //Test accesibility of login page by only utilizing tab
   test("Tab Test Through Login Page", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.goToLoginPage();
@@ -164,7 +164,7 @@ test.describe.skip("Accessibility tests", () => {
 
   test("Tab Add All Items to Cart", async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.loginUsername(userName);
@@ -188,7 +188,7 @@ test.describe.skip("Accessibility tests", () => {
 test.describe("Session Persistence Tests", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.loginUsername(userName);
@@ -206,7 +206,7 @@ test.describe("Tests that pertain to the shopping cart functionalities and purch
   // Before Each Test Case, Navigate to the Test Website & Login
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.loginUsername(userName);
@@ -245,7 +245,7 @@ test.describe("Tests that pertain to the shopping cart functionalities and purch
 test.describe("Test the Item Sorting Function on the homepage", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.loginUsername(userName);
@@ -299,7 +299,7 @@ test.describe("Test the Item Sorting Function on the homepage", () => {
 test.describe("Cost Calculation Functions", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
-    const userName = credentials.standard_user || process.env.STANDARD_USER;
+    const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
     await navigator.loginUsername(userName);
