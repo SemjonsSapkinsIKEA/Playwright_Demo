@@ -71,6 +71,7 @@ export class webpageNavigators {
     await sauce_locators.userNameField(this.page).fill(name);
   }
 
+//Accessibility function. Tab adds itemCount amount of items into the cart. 
   async tabAddItemsIntoCart(itemCount) {
     await this.clickAnything("homePageCheck");
 
@@ -86,6 +87,8 @@ export class webpageNavigators {
     }
   }
 
+  //Counts "remove" buttons found on homepage to verify how many items have been added to cart.
+  //Flaky? 
   async verifyItemCountInCart(expectedNumber) {
     let itemsInCart = sauce_locators.removeFromCartButton(this.page);
     let itemsInCartCount = await itemsInCart.count();
@@ -112,13 +115,15 @@ export class webpageNavigators {
     }
   }
 
+ //Fills in first name field found on checkout page. 
   async loginUsernameWithName() {
     const userName = credentials.firstName || process.env.FIRST_NAME;
     await sauce_locators.firstNameField(this.page).click();
     await sauce_locators.firstNameField(this.page).fill(userName);
+    console.log ("Successful login");
   }
-  //Clicks the last name purchasing field and fills it with the postal code from credentials
 
+  //Clicks the last name purchasing field and fills it with the postal code from credentials
   async loginUsernameWithLastName() {
     const lastName = credentials.lastName || process.env.LAST_NAME;
 
@@ -143,29 +148,17 @@ export class webpageNavigators {
     await sauce_locators.passwordField(this.page).fill(passWord);
   }
 
-  //Click the login button on the starting page
-  async clickLoginButton() {
-    await sauce_locators.loginButton(this.page).click();
-  }
-
-  //Function to verify the visibility of text on a homepage
-  async textVisibility(text) {
-    await expect(this.page.locator(`text=${text}`)).toBeVisible({
-    });
-  }
-
   //Function reduces 
   async pressTabOnKeyboard() {
     await this.page.keyboard.press("Tab");
   }
 
-    //Function inputs a tab keyboard input
-
+  //Function inputs a tab keyboard input
   async pressEnterOnKeyBoard() {
     await this.page.keyboard.press("Enter");
   }
 
-  //Function to compare two list
+  //Function to compare two list to see if list b has the same order as list a
   async compareListsOriginal(actualList) {
     const sortedProducts = await [...actualList].sort((a, b) =>
       a.localeCompare(b)
@@ -173,6 +166,7 @@ export class webpageNavigators {
     expect(actualList).toEqual(sortedProducts);
   }
 
+  //Function to compare two lists to see if list a has the same order as b. 
   async compareListsReverse(actualList) {
     const sortedProducts = await [...actualList].sort((a, b) =>
       b.localeCompare(a)
@@ -180,11 +174,12 @@ export class webpageNavigators {
     expect(actualList).toEqual(sortedProducts);
   }
 
+  //Helper method which compares the contents of two lists.
   async compareTwoLists(actual, expectedList) {
     expect(actual).toEqual(expectedList);
   }
 
-  //Calculate total price of all items in cart, clean them up and parse to a number.
+  //Calculate total price of all items in cart, clean them up(remove $ etc.) and parse to a number.
   async totalPriceCheck() {
     let priceWithSign = await this.page.locator(".inventory_item_price");
     let priceWithoutSign = await priceWithSign.allTextContents();
@@ -194,7 +189,6 @@ export class webpageNavigators {
       .reduce((acc, val) => acc + val, 0);
 
     return sumPrice;
-    //await this.totalPriceComparison(sumPrice);
   }
 
   //Compare calculated total to listed total. Cleans up listed total (removes excessive text) and parses to a number
@@ -229,7 +223,7 @@ export class webpageNavigators {
     return value;
   }
 
-  //Given the expected error text on the checkout page, checks if the text is actually visible
+//Given the expected error text on the checkout page, checks if the text is actually visible
   async verifyErrorTextOnCheckOutPage(errorTextExpected, focusOfTest) {
     await this.addNItemsToCart(1);
     await this.goToCart();
@@ -249,6 +243,7 @@ export class webpageNavigators {
     }
   }
 
+//Validates tax value listed on the website to what it should be, assuming 0.08 tax rate of total price.
   async calculateTax() {
     //0.08 is the assumed tax rate.
 
@@ -263,6 +258,7 @@ export class webpageNavigators {
     expect(parseFloat(calculatedTax)).toEqual(taxNumberProcessed);
   }
 
+  //Naviagtes page object to the check out overview page.
   async getToPaymentOverview() {
     await this.page.goto(links.checkOutOverviewPage);
   }

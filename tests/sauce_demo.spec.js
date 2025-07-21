@@ -139,12 +139,6 @@ test.describe("Tests that pertain to the purchase flow", () => {
     await navigator.verifyPresenceOfLocator("successfullPurchaseText");
   });
 
-  //TO DO
-  //Test Negative Cart Scenario
-
-  test.skip("Negative Cart Scenario", async ({ page }) => {
-    const navigator = new webpageNavigators(page);
-  });
 });
 
 //The following test suite tests the accesibility of the website by utilizing only keyboard functions and minimal clicks
@@ -198,10 +192,23 @@ test.describe("Session Persistence Tests", () => {
     await navigator.loginUsername(userName);
     await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
+
   });
 
-  test.skip("Login Add Item, Logout and Log Back in", async ({ page }) => {
+  test("Login Add Item, Logout and Log Back in", async ({ page }) => {
     const navigator = new webpageNavigators(page);
+    await navigator.addNItemsToCart(3);
+    await navigator.verifyItemCountInCart(3);
+    await navigator.clickAnything("openMenu");
+    await navigator.clickAnything("logOutButton");
+        const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
+    const passWord =
+      credentials.standard_password || process.env.STANDARD_PASSWORD;
+    await navigator.loginUsername(userName);
+    await navigator.loginPassword(passWord);
+    await navigator.clickAnything("loginButton");
+    await navigator.verifyItemCountInCart(3);
+
   });
 });
 
@@ -364,6 +371,7 @@ test.describe("Cost Calculation Functions", () => {
     await navigator.calculateTax();
   });
 
+  //Tests if adding an additional item
   test("Tax Update Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     await navigator.addNItemsToCart(2);
