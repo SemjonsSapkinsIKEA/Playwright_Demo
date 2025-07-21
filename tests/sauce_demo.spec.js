@@ -25,6 +25,9 @@ test.describe("Group of Login Functionality Tests", () => {
     const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
     const passWord =
       credentials.standard_password || process.env.STANDARD_PASSWORD;
+    if (!credentials.standard_user && !process.env.STANDARD_USERNAME) {
+      throw new Error("No standard user credentials found!");
+    }
     await navigator.loginUsername(userName);
     await navigator.loginPassword(passWord);
     await navigator.clickAnything("loginButton");
