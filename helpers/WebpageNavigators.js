@@ -1,18 +1,14 @@
 const links = require("../links.json");
 const sauce_locators = require("../locators/sauce_locators").sauce_locators;
-const text_resources = "../text_resources.json";
 const { expect } = require("@playwright/test");
 let credentials = {};
 try {
   credentials = require("../credentials.json");
 } catch (e) {
-  console.log("Github Secrets Rejected, wants to use credentials");
+  console.log("Using GitHub Secrets instead of credentials.json");
 }
 
-
 export class webpageNavigators {
-
-
   constructor(page) {
     this.page = page;
   }
@@ -41,11 +37,6 @@ export class webpageNavigators {
     await sauce_locators[itemName](this.page).click();
   }
 
-  //Clicks the first itemName locator on the page
-  async clickFirstAnything(itemName) {
-    await sauce_locators[itemName](this.page).first().click();
-  }
-
   //Clicks the nth number specified object
   async clickNthAnything(itemName, number) {
     await sauce_locators[itemName](this.page).nth(number).click();
@@ -61,6 +52,7 @@ export class webpageNavigators {
     await expect(sauce_locators[itemName](this.page)).not.toBeVisible();
   }
 
+  //Shortcut to the loginpage
   async goToLoginPage() {
     await this.page.goto(links.saucedemo);
   }
@@ -71,31 +63,29 @@ export class webpageNavigators {
     await sauce_locators.userNameField(this.page).fill(name);
   }
 
-//Accessibility function. Tab adds itemCount amount of items into the cart. 
+  //Accessibility function. Tab adds itemCount amount of items into the cart.
   async tabAddItemsIntoCart(itemCount) {
     await this.clickAnything("homePageCheck");
 
     for (let i = 0; i < 4; i++) {
-     await this.pressTabOnKeyboard();
+      await this.pressTabOnKeyboard();
     }
 
     for (let i = 0; i < itemCount; i++) {
-     await this.pressEnterOnKeyBoard();
+      await this.pressEnterOnKeyBoard();
       for (let i = 0; i < 3; i++) {
-       await this.pressTabOnKeyboard();
+        await this.pressTabOnKeyboard();
       }
     }
   }
 
   //Counts "remove" buttons found on homepage to verify how many items have been added to cart.
-  //Flaky? 
+
   async verifyItemCountInCart(expectedNumber) {
     let itemsInCart = sauce_locators.removeFromCartButton(this.page);
     let itemsInCartCount = await itemsInCart.count();
 
-    expect (itemsInCartCount).toEqual(expectedNumber);
-    
-    // expect (expectedNumber).toEqual(cartCount);
+    expect(itemsInCartCount).toEqual(expectedNumber);
   }
 
   async loginUserNameNoClick(name) {
@@ -115,31 +105,26 @@ export class webpageNavigators {
     }
   }
 
- //Fills in first name field found on checkout page. 
+  //Fills in first name field found on checkout page.
   async loginUsernameWithName() {
     const userName = credentials.firstName || process.env.FIRST_NAME;
     await sauce_locators.firstNameField(this.page).click();
     await sauce_locators.firstNameField(this.page).fill(userName);
-    console.log ("Successful login");
+    console.log("Successful login");
   }
 
   //Clicks the last name purchasing field and fills it with the postal code from credentials
   async loginUsernameWithLastName() {
     const lastName = credentials.lastName || process.env.LAST_NAME;
-
-        await sauce_locators.lastNameField(this.page).click();
-
+    await sauce_locators.lastNameField(this.page).click();
     await sauce_locators.lastNameField(this.page).fill(lastName);
   }
 
   //Clicks the postal code field and fills it with the postal code from credentials
   async postalCode() {
-
     const postalCode = credentials.postalCode || process.env.POSTAL_CODE;
     await sauce_locators.postalCodeField(this.page).click();
-    await sauce_locators
-      .postalCodeField(this.page)
-      .fill(postalCode);
+    await sauce_locators.postalCodeField(this.page).fill(postalCode);
   }
 
   //Logs in with the standard user credentials PASSWORD ONLY
@@ -148,12 +133,12 @@ export class webpageNavigators {
     await sauce_locators.passwordField(this.page).fill(passWord);
   }
 
-  //Function reduces 
+  //Function inputs a tab keyboard input, for accessibility testing
   async pressTabOnKeyboard() {
     await this.page.keyboard.press("Tab");
   }
 
-  //Function inputs a tab keyboard input
+  //Function inputs an enter keyboard input, for accessibility testing
   async pressEnterOnKeyBoard() {
     await this.page.keyboard.press("Enter");
   }
@@ -166,7 +151,7 @@ export class webpageNavigators {
     expect(actualList).toEqual(sortedProducts);
   }
 
-  //Function to compare two lists to see if list a has the same order as b. 
+  //Function to compare two lists to see if list a has the same order as b.
   async compareListsReverse(actualList) {
     const sortedProducts = await [...actualList].sort((a, b) =>
       b.localeCompare(a)
@@ -201,7 +186,6 @@ export class webpageNavigators {
       subTotalPriceWithText
     );
     let totalPrice = await this.totalPriceCheck();
-
     expect(totalPrice).toEqual(numberWithoutSign);
   }
 
@@ -223,7 +207,7 @@ export class webpageNavigators {
     return value;
   }
 
-//Given the expected error text on the checkout page, checks if the text is actually visible
+  //Given the expected error text on the checkout page, checks if the text is actually visible
   async verifyErrorTextOnCheckOutPage(errorTextExpected, focusOfTest) {
     await this.addNItemsToCart(1);
     await this.goToCart();
@@ -243,16 +227,15 @@ export class webpageNavigators {
     }
   }
 
-//Validates tax value listed on the website to what it should be, assuming 0.08 tax rate of total price.
+  //Validates tax value listed on the website to what it should be, assuming 0.08 tax rate of total price.
   async calculateTax() {
-    //0.08 is the assumed tax rate.
-
     let taxListedOnHomepage = await sauce_locators.taxCheckoutPage(this.page);
     let taxListedInText = await taxListedOnHomepage.allTextContents();
 
     let taxNumberProcessed = await this.convertTaxToNumber(taxListedInText);
     let totalPriceOnHomepage = await this.totalPriceCheck();
 
+    //0.08 is the tax rate.
     let calculatedTax = (totalPriceOnHomepage * 0.08).toFixed(2);
 
     expect(parseFloat(calculatedTax)).toEqual(taxNumberProcessed);

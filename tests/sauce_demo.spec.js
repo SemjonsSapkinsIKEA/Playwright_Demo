@@ -1,6 +1,5 @@
 import { test } from "@playwright/test";
 import { webpageNavigators } from "../helpers/WebpageNavigators.js";
-import { createZstdDecompress } from "zlib";
 const sauce_locators = require("../locators/sauce_locators").sauce_locators;
 const links = require("../links.json");
 const text_resources = require("../text_resources.js").text_resources;
@@ -18,8 +17,8 @@ test.afterEach(async ({ page }) => {
 
 //Overarching Test Suite for the Login Functionality of the Website
 test.describe("Group of Login Functionality Tests", () => {
+  
   //Test the standard login functionality
-
   test("Standard Login Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
@@ -59,6 +58,7 @@ test.describe("Group of Login Functionality Tests", () => {
     await navigator.verifyPresenceOfLocator("errorLogin");
   });
 
+  //Using an invalid password should lead to a login error and prevent login.
   test("Unsuccessful Login Test With Invalid Password", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
@@ -85,6 +85,7 @@ test.describe("Group of Login Functionality Tests", () => {
   });
 });
 
+//Test suite covering the testing of the entire purchase flow
 test.describe("Tests that pertain to the purchase flow", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
@@ -96,8 +97,7 @@ test.describe("Tests that pertain to the purchase flow", () => {
     await navigator.clickAnything("loginButton");
   });
 
-  //Test missing first name error message in checkout
-
+  //Test missing first name error message on checkout page
   test("First name error message", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     await navigator.verifyErrorTextOnCheckOutPage(
@@ -106,8 +106,7 @@ test.describe("Tests that pertain to the purchase flow", () => {
     );
   });
 
-  //Test missing last name error message in checkout
-
+  //Test missing last name error message on checkout page
   test("Last name Error Message", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     await navigator.verifyErrorTextOnCheckOutPage(
@@ -116,7 +115,7 @@ test.describe("Tests that pertain to the purchase flow", () => {
     );
   });
 
-  //Test missing postal code error message in checkout
+  //Test missing postal code error message on checkout page
   test("Postal Code Error Message", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     await navigator.verifyErrorTextOnCheckOutPage(
@@ -138,13 +137,10 @@ test.describe("Tests that pertain to the purchase flow", () => {
     await navigator.clickAnything("finishButtonPurchasing");
     await navigator.verifyPresenceOfLocator("successfullPurchaseText");
   });
-
 });
-
 //The following test suite tests the accesibility of the website by utilizing only keyboard functions and minimal clicks
-
 test.describe.skip("Accessibility tests", () => {
-  //Test accesibility of login page by only utilizing tab
+  //Test login function utilzing the tab key on the keyboard
   test("Tab Test Through Login Page", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
@@ -160,6 +156,7 @@ test.describe.skip("Accessibility tests", () => {
     await navigator.verifyPresenceOfLocator("homePageCheck");
   });
 
+  //Test the addition of items to the cart utilizing only the tab key.
   test("Tab Add All Items to Cart", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     const userName = credentials.standard_user || process.env.STANDARD_USERNAME;
@@ -183,6 +180,7 @@ test.describe.skip("Accessibility tests", () => {
   });
 });
 
+//Test suite that verifies session persistence upon logging in and out.
 test.describe("Session Persistence Tests", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
@@ -195,6 +193,7 @@ test.describe("Session Persistence Tests", () => {
 
   });
 
+  //Verify that three items are registered in the cart pre and post login
   test("Login Add Item, Logout and Log Back in", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     await navigator.addNItemsToCart(3);
@@ -306,7 +305,7 @@ test.describe("Test the Item Sorting Function on the homepage", () => {
   });
 });
 
-//Test Suite That Covers the Cost and Prices Listing in the
+//Test Suite That Covers the Cost and Prices Listing on the checkout page
 test.describe("Cost Calculation Functions", () => {
   test.beforeEach(async ({ page }) => {
     const navigator = new webpageNavigators(page);
@@ -363,7 +362,7 @@ test.describe("Cost Calculation Functions", () => {
     await navigator.totalPriceComparison(cleanedPrice);
   });
 
-  //Tests if the tax calculation is correct
+  //Tests if the tax calculation is correct on the checkoutpage
   test("Tax Calculation Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     await navigator.addNItemsToCart(2);
@@ -371,7 +370,7 @@ test.describe("Cost Calculation Functions", () => {
     await navigator.calculateTax();
   });
 
-  //Tests if adding an additional item
+  //Tests if addition of new items is reflected in the tax calculation on checkout page
   test("Tax Update Test", async ({ page }) => {
     const navigator = new webpageNavigators(page);
     await navigator.addNItemsToCart(2);
