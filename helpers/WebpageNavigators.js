@@ -8,6 +8,7 @@ try {
   console.log("Using GitHub Secrets instead of credentials.json");
 }
 
+//Navigator Class Constructor instantiation 
 export class webpageNavigators {
   constructor(page) {
     this.page = page;
@@ -80,13 +81,14 @@ export class webpageNavigators {
   }
 
   //Counts "remove" buttons found on homepage to verify how many items have been added to cart.
-
   async verifyItemCountInCart(expectedNumber) {
-    let itemsInCart = sauce_locators.removeFromCartButton(this.page);
+    let itemsInCart = sauce_locators.removeFromCart(this.page);
     let itemsInCartCount = await itemsInCart.count();
 
     expect(itemsInCartCount).toEqual(expectedNumber);
   }
+
+  //Method used to fill-in details for accessibility testing
 
   async loginUserNameNoClick(name) {
     await sauce_locators.userNameField(this.page).fill(name);

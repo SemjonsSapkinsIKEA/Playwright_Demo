@@ -2,7 +2,7 @@
 
 ## Setting Up a Project
 * Clone the repository
-```git clone https://github.com/SemjonsSapkinsIKEA/Playwright_Demo/settings ```
+```git clone https://github.com/SemjonsSapkinsIKEA/Playwright_Demo ```
 
 * Install dependencies
 

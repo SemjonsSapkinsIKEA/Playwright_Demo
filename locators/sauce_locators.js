@@ -35,7 +35,6 @@ export const sauce_locators = {
   finishButtonPurchasing: (page) => page.getByRole("link", { name: "FINISH" }), //Finishing purchasing button in cart
   checkOutButton: (page) => page.getByRole("link", { name: "CHECKOUT" }), //Checkout button in the shopping cart
   addToCartButton: (page) => page.getByRole("button", { name: "ADD TO CART" }), //Add to cart button for the products
-  removeFromCartButton: (page) => page.getByRole("button", {name: 'REMOVE'}), 
   removeFromCart: (page) => page.getByRole("button", { name: "REMOVE" }), //Button to remove selected items from the cart
   sortZToA: (page) => page.getByRole("combobox").selectOption("za"), //Reverse Alphabetic Item Sorting Button Found on Homepage (Z-A)
   sortLowToHighPrice: (page) => page.getByRole("combobox").selectOption("lohi"), //Low to High Price Item Sorting Button Found on Homepage
@@ -45,7 +44,7 @@ export const sauce_locators = {
   addToCart: (page) => page.locator(".btn_primary.btn_inventory"), //Buttons used to add items to cart
   errorButton: (page) => page.locator(".error-button"), //Error button listed on many pages, reused in multiple parts of the website
   allItemsButton: (page) => page.getByRole("link", { name: "All Items" }),
-  //Button found in the topleft meny that navigates back to the page with all items listed
+  //Button found in the topleft menu that navigates back to the page with all items listed
   userNameField: (page) => page.locator('[data-test="username"]'), //Username field on the starting page
   passwordField: (page) => page.locator('[data-test="password"]'), //Password field on the starting page
   firstNameField: (page) => page.locator('[data-test="firstName"]'), //First name field in the purchashing page
